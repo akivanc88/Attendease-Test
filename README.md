@@ -2,7 +2,7 @@
 
 
 
-    To run all the example codes please follow the instruction below
+    To run the codes please follow the instruction below
 
 
 
