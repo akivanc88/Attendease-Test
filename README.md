@@ -1,6 +1,7 @@
 # ProcessAttendees
 
-
+Technology Used: Node.JS, JavaScript.
+Node.js required to run this application
 
     To run the codes please follow the instruction below
 
