@@ -1,7 +1,6 @@
 // to use methods from other files we simply use `require` with path name
 var reader = require( './read' ),
     writer = require( './write' );
-	analyzer = require( './analyze' );
 
 reader.read( './raw_attendees.csv', function( data ){
   var lines=data.split("\n");
@@ -39,7 +38,6 @@ for(i = 0; i< result.length; i++){
 	
 	if (result[i].phone!=undefined) {
 		if(result[i].phone.indexOf("+")==0){
-		console.log(result[i].phone);
 		result[i].phone = result[i].phone.slice(3);
 		}
 		result[i].phone = result[i].phone.replace(regexObj, "($1) $2-$3");
