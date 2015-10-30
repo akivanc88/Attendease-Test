@@ -1,12 +1,10 @@
 // to use methods from other files we simply use `require` with path name
 var reader = require( './read' ),
     writer = require( './write' );
+	analyzer = require( './analyze' );
 
-// call `read` method from read.js to read `source.txt`
 reader.read( './raw_attendees.csv', function( data ){
-  // change `I am` to `You are`
-  //var changed = data.replace( 'I am', 'You are' );
-  var lines=csv.split("\n");
+  var lines=data.split("\n");
 
   var result = [];
 
@@ -24,13 +22,44 @@ reader.read( './raw_attendees.csv', function( data ){
 	  result.push(obj);
 
   }
+//validate email using regex  
+ function validateEmail(email) { 
   
-  //return result; //JavaScript object
-  return JSON.stringify(result); //JSON
-  
-  // print out the data
-  reader.print( JSON.stringify(result) );
-  
-  // save the changes to `changed.txt`
-  writer.write( './changed.txt', changed );
+    var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    return re.test(email);
+}
+
+//phone validation regex
+var regexObj =  /^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$/;
+//var subst = '$1 $2-$3'; 
+
+var uniqueNames = [];
+	nonuniqueNames = [];
+for(i = 0; i< result.length; i++){
+	
+	if (result[i].phone!=undefined) {
+		if(result[i].phone.indexOf("+")==0){
+		console.log(result[i].phone);
+		result[i].phone = result[i].phone.slice(3);
+		}
+		result[i].phone = result[i].phone.replace(regexObj, "($1) $2-$3");
+		
+	} else {
+    // Invalid phone number
+	}
+		
+    if(uniqueNames.indexOf(result[i].email) === -1){
+		if (validateEmail(result[i].email)){
+        uniqueNames.push(result[i]);
+		
+		} else {
+			nonuniqueNames.push(result[i]);
+		}        
+    } else {
+			nonuniqueNames.push(result[i]);
+		}         
+}
+ writer.write( './valid_attendees.json', JSON.stringify(uniqueNames));
+writer.write( './invalid_attendees.json', JSON.stringify(nonuniqueNames));
+
 });
